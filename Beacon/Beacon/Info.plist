@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Activate</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Activate</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Activate</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Activate</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict/>
+	</array>
+	<key>NSUserNotificationsUsageDescription</key>
+	<string>Send notifications forr test</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>bluetooth-central</string>
+		<string>bluetooth-peripheral</string>
+		<string>location</string>
+		<string>processing</string>
+	</array>
+</dict>
+</plist>
