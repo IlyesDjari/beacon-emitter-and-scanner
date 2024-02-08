@@ -1,4 +1,4 @@
-# Beacon Emitter and Scanner
+# Beacon Emitter and Scanner - SwiftUI
 
 This project demonstrates the functionality of emitting and detecting beacons using an iPhone. It consists of two main components: a beacon emitter and a beacon scanner. The emitter broadcasts a signal, while the scanner detects nearby beacons even when the app is running in the background.
 
