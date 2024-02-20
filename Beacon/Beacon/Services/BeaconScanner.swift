@@ -78,39 +78,50 @@ class BeaconScanner: NSObject, CLLocationManagerDelegate, ObservableObject {
         }
     }
     
-    /// Notifies when the device enters a beacon region.
+    /// Notifies when beacons are ranged in a region.s
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
         if let beaconRegion = region as? CLBeaconRegion {
             print("Entered region: \(beaconRegion.identifier)")
+            // Start ranging beacons in the region to get their major and minor values.
+            manager.startRangingBeacons(satisfying: beaconRegion.beaconIdentityConstraint)
+        }
+    }
+    
+    /// Notifies when the device enters a beacon region.
+    func locationManager(_ manager: CLLocationManager, didRangeBeacons foundBeacons: [CLBeacon], in region: CLBeaconRegion) {
+        DispatchQueue.main.async {
+            // Update your beacons array with the found beacons.
+            self.beacons = foundBeacons
             
-            let notificationContent = UNMutableNotificationContent()
-            notificationContent.title = "🕵️‍♀️ Beacon Detected check it out!"
-            notificationContent.body = "🌍 Entered region of following beacon: \(beaconRegion.identifier)"
-            notificationContent.sound = .default
-            
-            let request = UNNotificationRequest(identifier: "beaconRegionEntry",
-                                                content: notificationContent,
-                                                trigger: nil)
-            UNUserNotificationCenter.current().add(request) { error in
-                if let error  {
-                    print("Notification Error: \(error)")
+            // Check if there are any beacons found. If so, send a summary notification.
+            if !foundBeacons.isEmpty {
+                let beaconCount = foundBeacons.count
+                let firstBeacon = foundBeacons[0] // Example using the first beacon for details.
+                
+                let notificationContent = UNMutableNotificationContent()
+                notificationContent.title = "🕵️‍♀️ Beacons Detected!"
+                notificationContent.body = "Detected \(beaconCount) beacons near you. Beacon with UUID: \(firstBeacon.proximityUUID), major: \(firstBeacon.major), minor: \(firstBeacon.minor)."
+                notificationContent.sound = .default
+                
+                // Use a unique identifier for the notification to replace any existing notification of this type.
+                let request = UNNotificationRequest(identifier: "beaconDetectionSummary", // A constant identifier ensures replacing the previous notification.
+                                                    content: notificationContent,
+                                                    trigger: nil)
+                UNUserNotificationCenter.current().add(request) { error in
+                    if let error  {
+                        print("Notification Error: \(error)")
+                    }
                 }
             }
         }
     }
+
     
     /// Notifies when the device exits a beacon region.
     func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
         if let beaconRegion = region as? CLBeaconRegion {
             viewModel.updateEmittingStatus(with: .exitedRegion)
             locationManager?.stopRangingBeacons(satisfying: beaconRegion.beaconIdentityConstraint)
-        }
-    }
-    
-    /// Notifies when beacons are ranged in a region.
-    func locationManager(_ manager: CLLocationManager, didRangeBeacons foundBeacons: [CLBeacon], in region: CLBeaconRegion) {
-        DispatchQueue.main.async {
-            self.beacons = foundBeacons
         }
     }
     
